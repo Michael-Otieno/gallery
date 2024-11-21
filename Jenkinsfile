@@ -25,14 +25,13 @@ pipeline {
                 echo 'Setting up MongoDB'
                 script {
                     sh '''
-                    # Update system packages
-                    sudo apt-get update
+                    apt-get update
 
                     # Install MongoDB
-                    sudo apt-get install -y mongodb
+                    apt-get install -y mongodb
 
                     # Start MongoDB service
-                    sudo service mongod start
+                    service mongod start
 
                     # Verify MongoDB is running
                     mongo --eval "db.runCommand({ connectionStatus: 1 })"
