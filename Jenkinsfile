@@ -5,8 +5,8 @@ pipeline {
     environment {
         RENDER_SERVICE_ID = credentials('render-id') 
         RENDER_API_KEY = credentials('api-key') 
-        NOTIFICATION_EMAIL = 'm.otieno205@gmail.com'
-        SITE_URL = 'https://gallery-qgjg.onrender.com/'
+        NOTIFICATION_EMAIL = credentials('notification-email')
+        SITE_URL = credentials('site-url')
     }
 
     stages {
@@ -47,7 +47,7 @@ pipeline {
             //     subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
             //     body: """
             //         <html>
-            //             <body>
+            //             <body style="color:'#69db7c'">
             //                 <p>The build <b>#${env.BUILD_NUMBER}</b> of job <b>${env.JOB_NAME}</b> was successful.</p>
             //                 <p>Check the details at: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
             //             </body>
@@ -59,7 +59,7 @@ pipeline {
             slackSend(
                 channel: '#michael_ip1', 
                 color: 'good', 
-                message: "Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER} #${env.BUILD_ID} #${env.SITE_URL}")
+                message: "Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER} #${env.SITE_URL}")
 
         }
         
