@@ -20,25 +20,7 @@ pipeline {
                 sh 'npm install'
             }
         }
-         stage('Setup MongoDB') {
-            steps {
-                echo 'Setting up MongoDB'
-                script {
-                    sh '''
-                    apt-get update
-
-                    # Install MongoDB
-                    apt-get install -y mongodb
-
-                    # Start MongoDB service
-                    service mongod start
-
-                    # Verify MongoDB is running
-                    mongo --eval "db.runCommand({ connectionStatus: 1 })"
-                    '''
-                }
-            }
-        }
+        
         stage('Deployment'){
             steps{
                 echo 'Deploying to render'
