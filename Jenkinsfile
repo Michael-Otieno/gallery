@@ -5,7 +5,7 @@ pipeline {
     environment {
         RENDER_SERVICE_ID = credentials('render-id') 
         RENDER_API_KEY = credentials('api-key') 
-         NOTIFICATION_EMAIL = 'm.otieno205@gmail.com'
+        NOTIFICATION_EMAIL = 'm.otieno205@gmail.com'
     }
 
     stages {
@@ -42,20 +42,23 @@ pipeline {
 
          success {
             echo 'Build and tests succeeded. Sending success notification...'
-            emailext(
-                subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """
-                    <html>
-                        <body>
-                            <p>The build <b>#${env.BUILD_NUMBER}</b> of job <b>${env.JOB_NAME}</b> was successful.</p>
-                            <p>Check the details at: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        </body>
-                    </html>
-                """,
-                mimeType: 'text/html',
-                to: "${env.NOTIFICATION_EMAIL}"
-            )
-        // slackSend(channel: '#build-notifications', color: 'good', message: "Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
+            // emailext(
+            //     subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            //     body: """
+            //         <html>
+            //             <body>
+            //                 <p>The build <b>#${env.BUILD_NUMBER}</b> of job <b>${env.JOB_NAME}</b> was successful.</p>
+            //                 <p>Check the details at: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+            //             </body>
+            //         </html>
+            //     """,
+            //     mimeType: 'text/html',
+            //     to: "${env.NOTIFICATION_EMAIL}"
+            // )
+            slackSend(
+                channel: '#build-notifications', 
+                color: 'good', 
+                message: "Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
 
         }
         
