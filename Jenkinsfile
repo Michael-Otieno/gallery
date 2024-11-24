@@ -42,6 +42,16 @@ pipeline {
         always {
             echo 'Cleaning up resources...'
         }
+
+         success {
+            echo 'Build and tests succeeded. Sending success notification...'
+            emailext(
+                subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """<p>The build <b>#${env.BUILD_NUMBER}</b> of job <b>${env.JOB_NAME}</b> was successful.</p>
+                         <p>Check the details at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a>.</p>""",
+                to: "${env.NOTIFICATION_EMAIL}"
+            )
+        }
         
         failure {
             echo 'Tests failed. Sending notification...'
@@ -54,9 +64,7 @@ pipeline {
             )
         }
 
-        success {
-            echo 'Build and tests succeeded!'
-        }
+        
     }
 
 
