@@ -55,6 +55,7 @@ pipeline {
                 mimeType: 'text/html',
                 to: "${env.NOTIFICATION_EMAIL}"
             )
+        // slackSend(channel: '#build-notifications', color: 'good', message: "Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
 
         }
         
