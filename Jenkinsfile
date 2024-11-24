@@ -29,10 +29,7 @@ pipeline {
         stage('Deployment'){
             steps{
                 script {
-                    sh """
-                    curl -X POST \
-                        https://api.render.com/deploy/${RENDER_SERVICE_ID}?key=${RENDER_API_KEY}
-                    """
+                    sh 'curl -X POST https://api.render.com/deploy/${RENDER_SERVICE_ID}?key=${RENDER_API_KEY}'
                 }
             }
         }
@@ -47,21 +44,36 @@ pipeline {
             echo 'Build and tests succeeded. Sending success notification...'
             emailext(
                 subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """<p>The build <b>#${env.BUILD_NUMBER}</b> of job <b>${env.JOB_NAME}</b> was successful.</p>
-                         <p>Check the details at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a>.</p>""",
+                body: """
+                    <html>
+                        <body>
+                            <p>The build <b>#${env.BUILD_NUMBER}</b> of job <b>${env.JOB_NAME}</b> was successful.</p>
+                            <p>Check the details at: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                        </body>
+                    </html>
+                """,
+                mimeType: 'text/html',
                 to: "${env.NOTIFICATION_EMAIL}"
             )
+
         }
         
         failure {
             echo 'Tests failed. Sending notification...'
-            // Example: Sending an email notification
             emailext(
-                subject: "Test Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """<p>The build <b>#${env.BUILD_NUMBER}</b> of job <b>${env.JOB_NAME}</b> has failed.</p>
-                         <p>Check the details at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a>.</p>""",
+                subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                    <html>
+                        <body>
+                            <p>The build <b>#${env.BUILD_NUMBER}</b> of job <b>${env.JOB_NAME}</b> was successful.</p>
+                            <p>Check the details at: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                        </body>
+                    </html>
+                """,
+                mimeType: 'text/html',
                 to: "${env.NOTIFICATION_EMAIL}"
             )
+
         }
 
         
