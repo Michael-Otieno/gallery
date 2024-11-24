@@ -59,7 +59,7 @@ pipeline {
             slackSend(
                 channel: '#michael_ip1', 
                 color: 'good', 
-                message: "Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER} #${env.SITE_URL}")
+                message: "Build Succeeded: #${env.BUILD_NUMBER} ${env.SITE_URL}")
 
         }
         
