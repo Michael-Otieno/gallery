@@ -5,6 +5,7 @@ pipeline {
     environment {
         RENDER_SERVICE_ID = credentials('render-id') 
         RENDER_API_KEY = credentials('api-key') 
+         NOTIFICATION_EMAIL = 'm.otieno205@gmail.com'
     }
 
     stages {
@@ -19,7 +20,7 @@ pipeline {
             }
         }
 
-        stage('Test code'){
+        stage('Test'){
             steps{
                 sh 'npm test'
             }
@@ -27,7 +28,6 @@ pipeline {
         
         stage('Deployment'){
             steps{
-                echo 'Deploying to render'
                 script {
                     sh """
                     curl -X POST \
@@ -37,4 +37,27 @@ pipeline {
             }
         }
     }
+
+     post {
+        always {
+            echo 'Cleaning up resources...'
+        }
+        
+        failure {
+            echo 'Tests failed. Sending notification...'
+            // Example: Sending an email notification
+            emailext(
+                subject: "Test Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """<p>The build <b>#${env.BUILD_NUMBER}</b> of job <b>${env.JOB_NAME}</b> has failed.</p>
+                         <p>Check the details at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a>.</p>""",
+                to: "${env.NOTIFICATION_EMAIL}"
+            )
+        }
+
+        success {
+            echo 'Build and tests succeeded!'
+        }
+    }
+
+
 }
